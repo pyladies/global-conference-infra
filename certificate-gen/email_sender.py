@@ -1,18 +1,15 @@
 import base64
-from email.message import EmailMessage
-
-import google.auth
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 import mimetypes
-import smtplib
 import sys
-from pathlib import Path
-from textwrap import dedent
-
 import pandas as pd
 import os.path
 
+from email.message import EmailMessage
+
+from pathlib import Path
+from textwrap import dedent
+
+from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -151,14 +148,13 @@ if __name__ == "__main__":
         subject = "[PyLadiesCon] 2023 Certificate of attendance + 2024 Conference Launch"
 
         # DANGER: remove comment only when ready to send!
-
-        send_email(subject, body, sender_name, sender_email, recipients, pdf_file)
+        #send_email(subject, body, sender_name, sender_email, recipients, pdf_file)
         # END DANGER
 
         # Comment this when ready to send all the messages
-        # print(f"From: {sender_name} {sender_email}")
-        # print(f"To: {name} {recipients}")
-        # print("Subject: {subject}")
-        # print()
-        # print(body)
-        # input()
+        print(f"From: {sender_name} {sender_email}")
+        print(f"To: {name} {recipients}")
+        print("Subject: {subject}")
+        print()
+        print(body)
+        input()

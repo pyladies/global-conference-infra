@@ -11,7 +11,7 @@ source venv/bin/activate
 
 2. Install the dependencies
 
-```[2023_participants_test.csv](..%2F..%2F..%2F..%2FDownloads%2Fcertificate-gen%2F2023_participants_test.csv)
+```
 python3 -m pip install -U pip
 python3 -m pip install -r requirements.txt
 ```

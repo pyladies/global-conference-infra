@@ -1,17 +1,14 @@
 import httpx
+import os
 import os.path
 import csv
 import io
-import re
 from datetime import datetime, timedelta
-
-
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
 
 import subprocess
@@ -22,8 +19,9 @@ BASE_URL = "https://pretalx.com/api/events/pyladiescon-2024/"
 SCOPES = ["https://www.googleapis.com/auth/drive",
           "https://www.googleapis.com/auth/spreadsheets"
           ]
-GSHEET_ID = ""
-API_TOKEN = ""
+GSHEET_ID = os.getenv("GSHEET_ID")
+SHEET_TAB = "schedule_autogen"
+PRETALX_API_TOKEN = os.getenv("PRETALX_API_TOKEN")
 
 MAIN_STREAM_ROOM = "Main Stream"
 MAX_SECONDS = 1200 # 20 minutes
@@ -80,6 +78,7 @@ class Session:
         self.video_length = 0
         self.video_duration = ''
         self.video_within_limit = None
+        self.q_a = ''
 
 
     def add_speaker(self, speaker_dict):
@@ -105,8 +104,9 @@ class Session:
             "gdrive_id": self.gdrive_id,
             "video_received": self.video_received,
             "video_length": self.video_length,
-            "video_duration": self.video_duration,
+            "video_duration": str(self.video_duration),
             "video_within_limit": self.video_within_limit,
+            "q_a": self.q_a,
             "gdrive_url": f"https://drive.google.com/drive/folders/{self.gdrive_id}" if self.gdrive_id else ""
         }
 
@@ -154,7 +154,7 @@ def get_audio_length(filepath):
 
 class PyLadiesCon:
     def __init__(self):
-        self.pretalx_wrapper = PretalxWrapper(API_TOKEN)
+        self.pretalx_wrapper = PretalxWrapper(PRETALX_API_TOKEN)
         self.speaker_gdrive_map = {}
 
         self.creds = None
@@ -180,7 +180,7 @@ class PyLadiesCon:
             reader = csv.reader(f)
             next(reader)
             for row in reader:
-                self.speaker_gdrive_map[row[0]] = row[1]
+                self.speaker_gdrive_map[row[0]] = {"gdrive_id": row[1], "q_a": row[2]}
 
     def check_speaker_video(self, session):
         """Locate the speaker's GDrive folder, check if there's a video in it. Download the video, then check the duration."""
@@ -226,27 +226,47 @@ class PyLadiesCon:
         for session in self.sessions:
             for speaker in session.speakers:
                 if speaker.speaker_id in self.speaker_gdrive_map:
-                    session.gdrive_id = self.speaker_gdrive_map[speaker.speaker_id]
+                    session.gdrive_id = self.speaker_gdrive_map[speaker.speaker_id]["gdrive_id"]
+                    session.q_a = self.speaker_gdrive_map[speaker.speaker_id]["q_a"]
 
         scheduled_sessions = sorted([session for session in self.sessions if session.start_time is not None], key=lambda s: s.start_time)
 
         for session in scheduled_sessions:
             if session.gdrive_id:
                 self.check_speaker_video(session)
-
+        session_rows = []
         with open("schedule.csv", "w") as f:
             writer = csv.writer(f)
-            writer.writerow(["session_code", "title", "submission_type", "state", "room", "start_time", "end_time", "speakers", "gdrive_id", "video_received", "video_length", "video_duration", "video_within_limit", "gdrive_url"])
-
+            header = ["session_code", "title", "submission_type", "state", "room", "start_time", "end_time", "speakers", "gdrive_id", "video_received", "video_length", "video_duration", "video_within_limit", "q&a", "gdrive_url"]
+            writer.writerow(header)
+            session_rows.append(header)
             for session in scheduled_sessions:
                 if session.room == MAIN_STREAM_ROOM:
-                    print(session.to_dict())
                     writer.writerow(session.to_dict().values())
+                    session_rows.append([v for v in session.to_dict().values()])
             unscheduled_sessions = [session for session in self.sessions if session.start_time is None]
             for session in unscheduled_sessions:
-                print(session.to_dict())
                 writer.writerow(session.to_dict().values())
+                session_rows.append([v for v in session.to_dict().values()])
 
+        sheet = self.gsheets_service.spreadsheets()
+        range = f"{SHEET_TAB}!A1:O{len(self.sessions)+1}"
+
+        body = {
+          "valueInputOption": "USER_ENTERED",
+          "data": {
+  "range": range,
+  "values": session_rows
+},
+          "includeValuesInResponse": True,
+        }
+        result = (
+            sheet.values()
+            .batchUpdate(spreadsheetId=GSHEET_ID, body=body )
+            .execute()
+        )
+        values = result.get("values", [])
+        print(values)
 
 
 def main():

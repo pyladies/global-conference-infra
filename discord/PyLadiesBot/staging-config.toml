@@ -1,0 +1,86 @@
+[roles]
+ORGANISERS = 1249772565887582301
+VOLUNTEERS = 1249772565887582300
+VOLUNTEERS_ONSITE = 1249772565887582299
+VOLUNTEERS_REMOTE = 1249772565866483721
+SPEAKERS = 1249772565866483720
+SPONSORS = 1249772565866483719
+PARTICIPANTS = 1249772565866483717
+PARTICIPANTS_ONSITE = 1249772565866483716
+PARTICIPANTS_REMOTE = 1249772565866483715
+
+[ticket_to_role]
+# onsite participants
+"Business" = ["PARTICIPANTS", "PARTICIPANTS_ONSITE"]
+"Community Contributors" = ["PARTICIPANTS", "PARTICIPANTS_ONSITE"]
+"Education" = ["PARTICIPANTS", "PARTICIPANTS_ONSITE"]
+"Grant ticket" = ["PARTICIPANTS", "PARTICIPANTS_ONSITE"]
+"Personal" = ["PARTICIPANTS", "PARTICIPANTS_ONSITE"]
+# remote participants
+"Remote Grant ticket" = ["PARTICIPANTS", "PARTICIPANTS_REMOTE"]
+# speakers
+"Presenter" = ["PARTICIPANTS", "PARTICIPANTS_ONSITE", "SPEAKERS"]
+# sponsors
+"Sponsor Conference Ticket" = ["PARTICIPANTS", "PARTICIPANTS_ONSITE", "SPONSORS"]
+
+[additional_roles_by_variation]
+"Volunteer" = ["VOLUNTEERS"]
+
+[registration]
+REG_CHANNEL_ID = 1249772566957265045
+REG_HELP_CHANNEL_ID = 1251249570722218135
+REG_LOG_CHANNEL_ID = 1249772566957265046
+REGISTERED_LOG_FILE = "registered_log.txt"
+
+[pretix]
+PRETIX_BASE_URL = "https://pretix.eu/api/v1/organizers/europython/events/ep2023-staging2"
+PRETIX_CACHE_FILE = "pretix_cache.json"
+
+[logging]
+LOG_LEVEL = "INFO"
+
+[program_notifications]
+# UTC offset in hours (e.g. 2 for CEST)
+timezone_offset = 2
+api_url = "https://programapi24.europython.eu/2024/schedule.json"
+schedule_cache_file = "schedule.json"
+livestream_url_file = "livestreams.toml"
+
+# optional simulated start time for testing program notifications
+# simulated_start_time = "2024-07-10T07:30:00"
+
+# optional fast mode for faster testing of program notifications
+# will only take effect if simulated_start_time is set
+# fast_mode = true
+
+[program_notifications.rooms.main_channel]
+name = "Main Channel"
+channel_id = "1249772566210674754"
+
+[program_notifications.rooms.forum_hall]
+name = "Forum Hall"
+channel_id = "1249772566210674755"
+
+[program_notifications.rooms.south_hall_2a]
+name = "South Hall 2A"
+channel_id = "1249772566210674756"
+
+[program_notifications.rooms.south_hall_2b]
+name = "South Hall 2B"
+channel_id = "1249772566210674757"
+
+[program_notifications.rooms.north_hall]
+name = "North Hall"
+channel_id = "1249772566445297714"
+
+[program_notifications.rooms.terrace_2a]
+name = "Terrace 2A"
+channel_id = "1249772566445297715"
+
+[program_notifications.rooms.terrace_2b]
+name = "Terrace 2B"
+channel_id = "1249772566445297716"
+
+[program_notifications.rooms.exhibit_hall]
+name = "Exhibit Hall"
+channel_id = "1255221820060336208"

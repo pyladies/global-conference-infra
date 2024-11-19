@@ -1,0 +1,9 @@
+[rooms.main]
+name = "Main"
+"2024-07-10" = ["https://www.youtube.com/watch?v=b7wIYTCCa2k", ...., ...]
+"2024-07-11" = "https://www.youtube.com/watch?v=b7wIYTCCa2k"
+
+[rooms.activities]
+name = "Activities"
+"2024-07-10" = "https://www.youtube.com/watch?v=b7wIYTCCa2k"
+"2024-07-11" = "https://www.youtube.com/watch?v=b7wIYTCCa2k"

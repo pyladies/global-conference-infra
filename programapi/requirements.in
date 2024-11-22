@@ -1,0 +1,9 @@
+pdbpp
+pytest
+pre-commit
+
+pydantic
+python-dotenv
+python-slugify
+requests
+tqdm

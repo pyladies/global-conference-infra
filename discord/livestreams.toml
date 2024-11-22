@@ -1,9 +1,13 @@
+# FIXME
+# This is currently not working, and needs to be adapted.
+# The EP conference uses the approach of 1-video-per-room-per-day
+# but PyLadiesCon uses 1-video-per-talk
 [rooms.main]
 name = "Main"
-"2024-07-10" = ["https://www.youtube.com/watch?v=b7wIYTCCa2k", ...., ...]
-"2024-07-11" = "https://www.youtube.com/watch?v=b7wIYTCCa2k"
+"2024-07-10" = "https://www.youtube.com/watch?v=b7wIYTCCa2"
+"2024-07-11" = "https://www.youtube.com/watch?v=b7wIYTCCa2"
 
 [rooms.activities]
 name = "Activities"
-"2024-07-10" = "https://www.youtube.com/watch?v=b7wIYTCCa2k"
-"2024-07-11" = "https://www.youtube.com/watch?v=b7wIYTCCa2k"
+"2024-07-10" = "https://www.youtube.com/watch?v=b7wIYTCCa2"
+"2024-07-11" = "https://www.youtube.com/watch?v=b7wIYTCCa2"

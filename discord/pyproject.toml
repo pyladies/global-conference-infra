@@ -1,0 +1,11 @@
+[tool.isort]
+profile = "black"
+line_length = 100
+src_paths = ["PyLadiesBot"]
+
+[tool.black]
+line-length = 100
+
+[tool.pytest.ini_options]
+pythonpath = "PyLadiesBot"
+asyncio_mode = "auto"

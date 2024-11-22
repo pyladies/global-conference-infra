@@ -1,0 +1,10 @@
+.venv
+.secrets
+.idea
+.vscode
+PyLadiesBot/config.local.toml
+__pycache__
+.DS_Store
+registered_log.txt
+schedule.json
+pretix_cache.json

@@ -1,0 +1,17 @@
+[webhooks]
+rules = ""
+code_of_conduct = ""
+
+[roles]
+ORGANISERS =
+VOLUNTEERS =
+SPEAKERS =
+SPONSORS =
+PARTICIPANTS =
+CODE_OF_CONDUCT =
+
+[channel]
+REG_CHANNEL_ID =
+REG_HELP_CHANNEL_ID =
+REG_LOG_CHANNEL_ID =
+COC_CHANNEL_ID =

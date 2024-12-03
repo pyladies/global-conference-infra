@@ -84,23 +84,23 @@ class OptionButton(discord.ui.Button["Option"]):
         assert self.view is not None
 
         messages_correct = [
-            "That's correct!",
-            "Good guess ;)",
-            "Perfect!",
-            "You are...correct!",
-            "Correct answer",
-            "It seems you knew the logo!",
-            "Too easy? you are correct :D",
+            "## That's correct!",
+            "## Good guess ;)",
+            "## Perfect!",
+            "## You are...correct!",
+            "## Correct answer",
+            "## It seems you knew the logo!",
+            "## Too easy? you are correct :D",
         ]
 
         messages_incorrect = [
-            "No, that's incorrect",
-            "mmm maybe next time",
-            "Sadly, that's incorrect",
-            "Almost, but no",
-            "Better to try again",
-            "Wrong answer",
-            "The logo was maybe difficult to guess :(",
+            "## No, that's incorrect",
+            "## mmm maybe next time",
+            "## Sadly, that's incorrect",
+            "## Almost, but no",
+            "## Better to try again",
+            "## Wrong answer",
+            "## The logo was maybe difficult to guess :(",
         ]
 
         emoji_correct = "\N{WHITE HEAVY CHECK MARK}"
@@ -151,6 +151,60 @@ class OptionButton(discord.ui.Button["Option"]):
             await interaction.response.send_message(embed=embed, ephemeral=True, delete_after=4)
 
 
+class ScoreButton(discord.ui.Button["Role"]):
+    def __init__(
+        self,
+        bot,
+        channel_id,
+        x: int,
+        y: int,
+        label: str,
+        style: discord.ButtonStyle = discord.ButtonStyle.primary,
+    ):
+        super().__init__(style=style, label="\u200b", row=y)
+        self.x = x
+        self.y = y
+        self.label = label
+        self.style = style
+        self.bot = bot
+        self.channel_id = channel_id
+
+    async def callback(self, interaction: discord.Interaction):
+        assert self.view is not None
+
+        # Setting variable for new users
+        user_id = str(interaction.user.id)
+        if user_id not in self.bot.user_state:
+            # No registry
+            title = "No score found"
+            desc = (
+                "There is **no registry** of your score.\n"
+                f"Start playing in the <#{self.channel_id}>"
+            )
+        else:
+            user_data = self.bot.user_state[user_id]
+            _correct = user_data["correct"]
+            _incorrect = user_data["incorrect"]
+            points = _correct - int(_incorrect // 2)
+            title = "You score is"
+            seen = "\n- ".join(user_data["seen"])
+            desc = (
+                f"## {points} points\n\n"
+                f"You have '{_correct}' correct answers\n"
+                f"and '{_incorrect}' incorrect answers.\n\n"
+                f"and you got right the following chapters:\n- {seen}"
+            )
+
+        embed = discord.Embed(
+            title=title,
+            colour=0xDA373C,
+            description=desc,
+        )
+
+        await interaction.response.send_message(
+            embed=embed, ephemeral=True, delete_after=8
+        )
+
 class SimpleButton(discord.ui.Button["Role"]):
     def __init__(
         self,
@@ -193,7 +247,7 @@ class SimpleButton(discord.ui.Button["Role"]):
         random_row = self.bot.db[~seen].sample(n=1).to_dict("records")[0]
         print(f"Random row: {random_row}")
 
-        options = self.bot.db[~seen].sample(n=2)["Name"].to_list()
+        options = self.bot.db[(~seen)&(self.bot.db["Name"] != random_row["Name"])].sample(n=2)["Name"].to_list()
 
         print("Options:", options)
         options.append(random_row["Name"])
@@ -223,7 +277,7 @@ class Game(commands.Cog):
         self.guild = None
 
     # 5 minutes
-    @tasks.loop(300)
+    @tasks.loop(minutes=5)
     async def update_ranking(self):
         print(f"{datetime.now()} : Updating ranking")
         ranking_channel = self.bot.get_channel(self.ranking_channel_id)
@@ -263,6 +317,10 @@ class Game(commands.Cog):
         view = discord.ui.View(timeout=None)
         view.add_item(
             SimpleButton(self.bot, 0, 0, "Guess the chapter")
+        )
+        view.add_item(
+            ScoreButton(self.bot, self.channel_id, 0, 0, "Check your score",
+                        style=discord.ButtonStyle.secondary)
         )
 
         embed = discord.Embed(

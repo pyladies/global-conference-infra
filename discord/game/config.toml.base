@@ -1,0 +1,6 @@
+[general]
+TOKEN = "..."
+
+[game]
+CHANNEL_ID = XXXX
+RANKING_CHANNEL_ID = XXXX

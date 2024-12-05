@@ -1,0 +1,3 @@
+[general]
+PRETIX_TOKEN="..."
+CHANNEL_WEBHOOK="..."

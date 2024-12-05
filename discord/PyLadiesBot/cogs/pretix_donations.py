@@ -20,7 +20,7 @@ class PretixDonations(commands.Cog):
         self.pretix_token = os.environ["PRETIX_TOKEN"]
         _logger.info(f"Channel ID for Donations: {self.channel_id}")
 
-    @tasks.loop(minutes=1)
+    @tasks.loop(minutes=15)
     async def send_notification(self):
         channel = self.bot.get_channel(self.channel_id)
 

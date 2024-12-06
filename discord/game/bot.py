@@ -262,7 +262,8 @@ class SimpleButton(discord.ui.Button["Role"]):
         random_row = self.bot.db[~seen].sample(n=1).to_dict("records")[0]
         print(f"Random row: {random_row}")
 
-        options = self.bot.db[(~seen)&(self.bot.db["Name"] != random_row["Name"])].sample(n=2)["Name"].to_list()
+        #options = self.bot.db[(~seen)&(self.bot.db["Name"] != random_row["Name"])].sample(n=2)["Name"].to_list()
+        options = self.bot.db[(self.bot.db["Name"] != random_row["Name"])].sample(n=2)["Name"].to_list()
 
         print("Options:", options)
         options.append(random_row["Name"])

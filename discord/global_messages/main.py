@@ -79,11 +79,59 @@ data = {
             https://conference.pyladies.com/about/#code-of-conduct
         """)
     },
+    "sprints": {
+        "webhook": config['webhooks']['sprints_guidelines'],
+        "title": "Sprints Guidelines",
+        "message": dedent(f"""\
+            1. Sprints are an activity that will run during the whole conference.
+            2. The interaction will be only on Discord (on this category called `Sprints`)
+            3. Each Sprint project has a Forum channel, and a Voice channel.
+            3. The orientation will happen on December 6th, 20:40h UTC (check the [time here](https://time.is/UTC))
+               on Discord, in the channel <#1308516681231892521>
+            4. Anyone can participate!
+
+            **Each project has their own guidelines**
+            Check their first post on their channels:
+            - <#1312843117174591538>
+            - <#1310702448368943175>
+            - <#1312846344733593630>
+            - <#1312846431362617364>
+
+            More information: https://pretalx.com/pyladiescon-2024/talk/TYVM8N/
+
+        """)
+    },
+    "room_guidelines": {
+        "webhook": config['webhooks']['room_guidelines'],
+        "title": "Room Guidelines",
+        "message": dedent(f"""\
+            ## The schedule can be found [here](https://conference.pyladies.com/schedule/) and the default time is https://time.is/UTC
+
+            **Main Stream**
+            - All the sessions from `Main Stream` will be streamed on YouTube.
+            - You can access [the playlist](https://www.youtube.com/playlist?list=PLOItnwPQ-eHxWh6Af6xRuKprSk_OBU0cL) directly, or wait for each announcement with the direct YouTube link in <#1314615187323617392>.
+            - Use <#1308516459936223303> for text-only discussion and Q&A.
+            - Use <#1308516529658134619> in case you want to have voice chat.
+
+            **Activities & Open Spaces**
+            - All the sessions from `Activities & Open Spaces` will happen on Discord in the <#1308516681231892521> channel.
+            - You can use <#1308516652236804096> for text-only communication
+
+            ## Have a question?
+            Leave your message in <#1310528827449020418>
+        """)
+    },
 }
 
 if __name__ == "__main__":
 
-    for name, content in data.items():
-        w = SyncWebhook.from_url(content["webhook"])
-        e = Embed(title=content["title"], description=content["message"], color= 0xb42a34)
-        w.send(embed=e)
+    #for name, content in data.items():
+    #    w = SyncWebhook.from_url(content["webhook"])
+    #    e = Embed(title=content["title"], description=content["message"], color= 0xb42a34)
+    #    w.send(embed=e)
+
+    content = data["room_guidelines"]
+
+    w = SyncWebhook.from_url(content["webhook"])
+    e = Embed(title=content["title"], description=content["message"], color= 0xb42a34)
+    w.send(embed=e)

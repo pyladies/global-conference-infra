@@ -18,6 +18,27 @@ class Schedule(BaseModel):
     days: dict[date, DaySchedule]
 
 
+
+class Session(BaseModel):
+    """Session in the PyLadiesCon schedule"""
+
+    code: str
+    duration: int
+    event_type: str
+    level: str
+    rooms: list[str]
+    session_type: str
+    slug: str
+    speakers: list[Speaker]
+    start: datetime
+    title: str
+    track: str | None
+    youtube_url: str
+    website_url: str
+
+    def __hash__(self) -> int:
+        return hash(self.code + str(self.start))
+
 class Break(BaseModel):
     """Break in the PyLadiesCon schedule"""
 
@@ -27,26 +48,6 @@ class Break(BaseModel):
     rooms: list[str]
     start: datetime
 
-
-class Session(BaseModel):
-    """Session in the PyLadiesCon schedule"""
-
-    event_type: str
-    code: str
-    slug: str
-    title: str
-    session_type: str
-    speakers: list[Speaker]
-    tweet: str
-    level: str
-    track: str | None
-    rooms: list[str]
-    start: datetime
-    website_url: str
-    duration: int
-
-    def __hash__(self) -> int:
-        return hash(self.code + str(self.start))
 
 
 class Speaker(BaseModel):

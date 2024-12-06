@@ -34,7 +34,7 @@ class EuroPythonSpeaker(BaseModel):
     @computed_field
     def website_url(self) -> str:
         return (
-            f"https://ep{Config.event.split('-')[1]}.europython.eu/speaker/{self.slug}"
+            f"https://pretalx.com/pyladiescon-2024/speaker/{self.code}"
         )
 
     @model_validator(mode="before")
@@ -160,7 +160,7 @@ class EuroPythonSession(BaseModel):
     @computed_field
     def website_url(self) -> str:
         return (
-            f"https://ep{Config.event.split('-')[1]}.europython.eu/session/{self.slug}"
+            f"https://pretalx.com/pyladiescon-2024/talk/{self.code}"
         )
 
     @model_validator(mode="before")

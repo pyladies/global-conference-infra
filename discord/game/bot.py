@@ -54,7 +54,7 @@ class Bot(commands.Bot):
         print("Read chapters:", self.db.shape[0])
         self.backup.start()
 
-    @tasks.loop(minutes=1)
+    @tasks.loop(minutes=10)
     async def backup(self):
         bak_dir = Path("bak")
         if not bak_dir.exists():

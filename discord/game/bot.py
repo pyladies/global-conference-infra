@@ -50,18 +50,33 @@ class Bot(commands.Bot):
             with self.user_file_path.open("r") as f:
                 self.user_state = json.loads(f.read())
 
-        print("Read chapters:", self.db.shape[0])
 
-    async def close(self):
-        await super().close()
+        print("Read chapters:", self.db.shape[0])
+        self.backup.start()
+
+    @tasks.loop(minutes=1)
+    async def backup(self):
+        bak_dir = Path("bak")
+        if not bak_dir.exists():
+            bak_dir.mkdir()
+
         # Backup
         if self.user_file_path.exists():
+            print("Backing up file")
             dt = int(datetime.now().timestamp())
-            shutil.copyfile(self.user_file_path, f"{self.user_file_path}.bak.{dt}")
+
+            dst = bak_dir / f"{self.user_file_path}.bak.{dt}"
+            shutil.copyfile(self.user_file_path, str(dst))
 
         # Save dictionary
         with self.user_file_path.open("w") as f:
+            print("Writing new score file")
             json.dump(self.user_state, f)
+
+    async def close(self):
+        await super().close()
+
+        await self.backup()
 
 
 class OptionButton(discord.ui.Button["Option"]):
@@ -313,6 +328,7 @@ class Game(commands.Cog):
 
         emoji_diamond = "\N{SMALL ORANGE DIAMOND}"
         emoji_party = "\N{FACE WITH PARTY HORN AND PARTY HAT}"
+        emoji_trophy = "\N{TROPHY}"
 
         view = discord.ui.View(timeout=None)
         view.add_item(
@@ -343,6 +359,12 @@ class Game(commands.Cog):
         embed.add_field(
             name=f"{emoji_diamond} How many times I can play?",
             value="All the ones you want! Just press the 'Guess the chapter' button.",
+            inline=False,
+        )
+
+        embed.add_field(
+            name=f"{emoji_trophy} Prizes!",
+            value="The **top 3 players** will get a PyCharm License!.",
             inline=False,
         )
 

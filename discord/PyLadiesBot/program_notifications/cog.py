@@ -79,7 +79,8 @@ class ProgramNotificationsCog(commands.Cog):
         """
         Set the topic of a room channel
         """
-        channel_id = config.PROGRAM_CHANNELS[room.lower().replace(" ", "_")]["channel_id"]
+        _room_name = room.lower().replace("&", "").replace(" ", "_").replace("__", "_")
+        channel_id = config.PROGRAM_CHANNELS[_room_name]["channel_id"]
         channel = self.bot.get_channel(int(channel_id))
         await channel.edit(topic=topic)
 
@@ -87,7 +88,8 @@ class ProgramNotificationsCog(commands.Cog):
         """
         Send the given notification to the room channel
         """
-        channel_id = config.PROGRAM_CHANNELS[room.lower().replace(" ", "_")]["channel_id"]
+        _room_name = room.lower().replace("&", "").replace(" ", "_").replace("__", "_")
+        channel_id = config.PROGRAM_CHANNELS[_room_name]["channel_id"]
         channel = self.bot.get_channel(int(channel_id))
         await channel.send(content=content, embed=embed)
 

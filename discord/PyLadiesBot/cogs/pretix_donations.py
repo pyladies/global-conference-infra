@@ -65,6 +65,8 @@ class PretixDonations(commands.Cog):
                     s += f" {emoji}"
                 message += f"- **$ {int(sd[0])} USD** ({sd[1]} {s})\n"
 
+            message += "\n## You can donate here: https://pretix.eu/pyladiescon/2024/"
+
             # Get channel
             _logger.info("Removing content from the donations channel")
             await channel.purge()

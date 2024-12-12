@@ -23,6 +23,7 @@ PRETIX_API_TOKEN = ""
 
 GSLIDES_TEMPLATE_ID = ""
 GDRIVE_CERTIFICATES_FOLDER = ""
+STATS_SHEETS_ID = ""
 
 ITEM_ID_DONATION_ONLY = 655122
 ITEM_ID_GENERAL_TICKET = 609703
@@ -58,6 +59,7 @@ class PyLadiesCon:
         self.gdrive_service = build("drive", "v3", credentials=self.creds)
         self.gslides_service = build("slides", "v1", credentials=self.creds)
         self.gmail_service = build("gmail", "v1", credentials=self.creds)
+        self.gsheets_service = build("sheets", "v4", credentials=self.creds)
         self.pretix_orders = 0
         self.pretix_proceeds = 0
 
@@ -82,7 +84,7 @@ class PyLadiesCon:
         presentation_copy_id = drive_response.get("id")
         return presentation_copy_id
 
-    def send_certificate_email(self, sender_name, body_plain, body_html, sender_email, recipients, order_id, log_file=None):
+    def send_certificate_email(self, subject, sender_name, body_plain, body_html, sender_email, recipients, order_id, log_file=None):
         LOG_FILE = log_file or "email_sent_certificates.txt"
 
         if Path(LOG_FILE).exists():
@@ -100,7 +102,7 @@ class PyLadiesCon:
             message.add_attachment(content, maintype="application", subtype="pdf", filename=f"{order_id}.pdf")
 
 
-        message["Subject"] = f"Certificate of Attendance and Post-Conference Survey"
+        message["Subject"] = subject
         message["From"] = f"{sender_name} <{sender_email}>"
         message["To"] = ", ".join(recipients)
 
@@ -218,18 +220,19 @@ Use our hashtags <b>#PyLadiesCon</b> and <b>#PyLadies</b>.
         """
         )
                             print(item["attendee_email"])
-                            self.send_certificate_email("PyLadiesCon Organizers",
+                            self.send_certificate_email(f"Certificate of Attendance and Post-Conference Survey",
+                                                        "PyLadiesCon Organizers",
                                                         body_plain=body_plain,
                                                         body_html=email_template, sender_email="pyladiescon@pyladies.com",
                                                         recipients=[item["attendee_email"]],
                                                         order_id=order_position)
 
-    def generate_certificate(self, order_id, attendee_name):
+    def generate_certificate(self, order_id, attendee_name, attendee_role=None):
         presentation = (
             self.gslides_service.presentations().get(presentationId=GSLIDES_TEMPLATE_ID).execute()
         )
-
-        if not os.path.exists(f"./certificates/{order_id}.pdf"):
+        filename = f"{order_id}.pdf"
+        if not os.path.exists(f"./certificates/{filename}"):
             slides = presentation.get("slides")
             presentation_id = self.copy_presentation(GSLIDES_TEMPLATE_ID, order_id)
 
@@ -244,18 +247,78 @@ Use our hashtags <b>#PyLadiesCon</b> and <b>#PyLadies</b>.
                     }
                 },
             ]
+            if attendee_role is not None:
+                requests.append({"replaceAllText": {
+                        "containsText": {
+                            "text": "{{attendee-role}}",
+                            "matchCase": True,
+                        },
+                        "replaceText": attendee_role,
+                    }
+
+                })
             body = {"requests": requests}
             response = self.gslides_service.presentations().batchUpdate(presentationId=presentation_id,
                                                                         body=body).execute()
             stream = self.gdrive_service.files().export(fileId=presentation_id, mimeType="application/pdf").execute()
-            with open(f"./certificates/{order_id}.pdf", "wb") as f:
+            with open(f"./certificates/{filename}", "wb") as f:
                 f.write(stream)
+
+    def generate_volunteer_speaker_certificates(self):
+        sheet = self.gsheets_service.spreadsheets()
+        result = (
+        sheet.values()
+        .get(spreadsheetId=STATS_SHEETS_ID, range="Certificate generation!A2:D200")
+        .execute()
+    )
+        values = result.get("values", [])
+        for row in values:
+            name = row[0]
+            email = row[1]
+            role = row[2]
+            id = f"{role}-{name}"
+            self.generate_certificate(id, name, role)
+            body_plain = dedent(f"""
+                                        Dear {name},
+
+
+                    Thank you for being a {role} at PyLadiesCon. Attached is your Certificate of Participation for
+                    PyLadiesCon 2024 held from December 6th-December 8th, 2024.
+
+
+                    PyLadiesCon Organizers
+                """)
+
+            email_template = dedent(
+                f"""\
+                        <p>
+                    Dear {name},</p>
+
+
+                    <p>
+                    Thank you for being a {role} at PyLadiesCon. Attached is your Certificate of Participation for
+                    PyLadiesCon 2024 held from December 6th-December 8th, 2024.
+                    </p>
+                    
+                    <p>
+
+                    PyLadiesCon Organizersq
+                    </p>
+                    """
+            )
+            print(email)
+            self.send_certificate_email(f"Thank you for being a {role} at PyLadiesCon",
+                                        "PyLadiesCon Organizers",
+                                        body_plain=body_plain,
+                                        body_html=email_template, sender_email="pyladiescon@pyladies.com",
+                                        recipients=[email],
+                                        order_id=id)
 
 
 
 if __name__ == "__main__":
     util = PyLadiesCon()
-    util.generate_certificates()
+    util.generate_volunteer_speaker_certificates()
 
 
 

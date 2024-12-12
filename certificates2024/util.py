@@ -302,7 +302,7 @@ Use our hashtags <b>#PyLadiesCon</b> and <b>#PyLadies</b>.
                     
                     <p>
 
-                    PyLadiesCon Organizersq
+                    PyLadiesCon Organizers
                     </p>
                     """
             )

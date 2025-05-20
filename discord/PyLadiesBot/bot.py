@@ -1,20 +1,20 @@
 import asyncio
 import logging
 import os
-import sys
 from pathlib import Path
 
-import configuration
 import discord
 from cogs.ping import Ping
 from cogs.pretix_donations import PretixDonations
 from discord.ext import commands
 from dotenv import load_dotenv
+from helpers import _setup_logging
 from program_notifications.cog import ProgramNotificationsCog
 from registration.cog import RegistrationCog
 
 load_dotenv(Path(__file__).resolve().parent.parent / ".secrets")
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
+
 
 _logger = logging.getLogger("bot")
 
@@ -41,22 +41,6 @@ class Bot(commands.Bot):
             _logger.exception("Failed to load extension %r (package=%r):", name, package)
         else:
             _logger.info("Successfully loaded extension %r (package=%r)", name, package)
-
-
-def _setup_logging() -> None:
-    """Set up a basic logging configuration."""
-    config = configuration.Config()
-
-    # Create a stream handler that logs to stdout (12-factor app)
-    stream_handler = logging.StreamHandler(stream=sys.stdout)
-    stream_handler.setLevel(config.LOG_LEVEL)
-    formatter = logging.Formatter(fmt="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    stream_handler.setFormatter(formatter)
-
-    # Configure the root logger with the stream handler and log level
-    root_logger = logging.getLogger()
-    root_logger.addHandler(stream_handler)
-    root_logger.setLevel(config.LOG_LEVEL)
 
 
 def _get_intents() -> discord.Intents:

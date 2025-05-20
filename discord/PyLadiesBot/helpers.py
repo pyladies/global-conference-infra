@@ -1,6 +1,8 @@
 import logging
+import sys
 import textwrap
 
+import configuration
 from configuration import Config
 from discord import Message
 from discord.abc import Messageable
@@ -76,3 +78,19 @@ class DiscordLogger:
             return inner()
 
         return _log
+
+
+def _setup_logging() -> None:
+    """Set up a basic logging configuration."""
+    config = configuration.Config()
+
+    # Create a stream handler that logs to stdout (12-factor app)
+    stream_handler = logging.StreamHandler(stream=sys.stdout)
+    stream_handler.setLevel(config.LOG_LEVEL)
+    formatter = logging.Formatter(fmt="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    stream_handler.setFormatter(formatter)
+
+    # Configure the root logger with the stream handler and log level
+    root_logger = logging.getLogger()
+    root_logger.addHandler(stream_handler)
+    root_logger.setLevel(config.LOG_LEVEL)

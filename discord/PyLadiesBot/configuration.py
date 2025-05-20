@@ -1,8 +1,9 @@
 import logging
 import sys
-import tomllib
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+
+import tomllib
 
 _logger = logging.getLogger(f"bot.{__name__}")
 
@@ -76,6 +77,7 @@ class Config(metaclass=Singleton):
 
             # Logging
             self.LOG_LEVEL = config.get("logging", {}).get("LOG_LEVEL", "INFO")
+            self.log_channel = config["logging"]["channel_id"]
 
         except KeyError:
             _logger.exception(

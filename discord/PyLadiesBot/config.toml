@@ -42,6 +42,7 @@ DONATIONS_CHANNEL_ID = 1314028552223457471
 
 [logging]
 LOG_LEVEL = "INFO"
+channel_id = "TO SET"
 
 [program_notifications]
 # UTC offset in hours (e.g. 2 for CEST)

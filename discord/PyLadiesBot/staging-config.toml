@@ -38,6 +38,7 @@ PRETIX_CACHE_FILE = "pretix_cache.json"
 
 [logging]
 LOG_LEVEL = "INFO"
+channel_id = "TO SET"
 
 [program_notifications]
 # UTC offset in hours (e.g. 2 for CEST)

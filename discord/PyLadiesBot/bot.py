@@ -4,13 +4,12 @@ import os
 import sys
 from pathlib import Path
 
-import discord
-from discord.ext import commands
-from dotenv import load_dotenv
-
 import configuration
+import discord
 from cogs.ping import Ping
 from cogs.pretix_donations import PretixDonations
+from discord.ext import commands
+from dotenv import load_dotenv
 from program_notifications.cog import ProgramNotificationsCog
 from registration.cog import RegistrationCog
 

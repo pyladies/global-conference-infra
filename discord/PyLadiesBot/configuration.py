@@ -34,6 +34,12 @@ class Config(metaclass=Singleton):
             sys.exit(-1)
 
         try:
+            # Discord Server
+            self.GUILD_ID = int(config["discord_server"]["GUILD"])
+
+            # ROLES
+            self.ROLES_VOLUNTEERS = int(config["roles"]["VOLUNTEERS"])
+
             # Registration
             self.REG_CHANNEL_ID = int(config["registration"]["REG_CHANNEL_ID"])
             self.REG_HELP_CHANNEL_ID = int(config["registration"]["REG_HELP_CHANNEL_ID"])

@@ -1,3 +1,6 @@
+[discord_server]
+GUILD = 1000000000000000 # Needed for one-off commands (API) with no message context
+
 [roles]
 ORGANISERS = 1253767144286588990
 VOLUNTEERS = 1253767144286588989

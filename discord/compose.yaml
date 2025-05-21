@@ -41,7 +41,7 @@ services:
 
     # read all container only logs with
     # journalctl -u docker IMAGE_NAME=europythonbot -f
-    # logging:
-    #   driver: journald
+    logging:
+      driver: journald
     restart: unless-stopped
 

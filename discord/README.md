@@ -36,6 +36,9 @@ The `main` method in `PyLadiesBot/bot.py` is the entry point for the bot. I't a 
 to start browsing the codebase. It requires a `.secrets` file in the root of the repository with
 `DISCORD_BOT_TOKEN` and `PRETIX_TOKEN` environment variables.
 
+The API server is used to send events __to__ the bot (such as events from the PyLadies portal).
+To run it, run `fastapi dev PyLadiesBot/api_server/main.py`. It uses the same configuration and secrets as the main bot.
+
 ### Registration
 
 At PyLadiesCon, we use [pretix](https://pretix.eu/about/en/) as our ticketing system.
@@ -138,6 +141,7 @@ Add `.secrets` file to the root of the repository with the following content:
 ```shell
 DISCORD_BOT_TOKEN=<PyLadiesConTestBotToken>
 PRETIX_TOKEN=<PretixStagingToken>
+BOT_API_TOKEN=<BotAPIServerToken>
 ````
 After you have added the `.secrets` file, you can run the bot with the following command:
 ```shell

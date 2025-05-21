@@ -1,8 +1,9 @@
 import logging
 import sys
-import tomllib
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+
+import tomllib
 
 _logger = logging.getLogger(f"bot.{__name__}")
 
@@ -33,6 +34,12 @@ class Config(metaclass=Singleton):
             sys.exit(-1)
 
         try:
+            # Discord Server
+            self.GUILD_ID = int(config["discord_server"]["GUILD"])
+
+            # ROLES
+            self.ROLES_VOLUNTEERS = int(config["roles"]["VOLUNTEERS"])
+
             # Registration
             self.REG_CHANNEL_ID = int(config["registration"]["REG_CHANNEL_ID"])
             self.REG_HELP_CHANNEL_ID = int(config["registration"]["REG_HELP_CHANNEL_ID"])
@@ -76,6 +83,7 @@ class Config(metaclass=Singleton):
 
             # Logging
             self.LOG_LEVEL = config.get("logging", {}).get("LOG_LEVEL", "INFO")
+            self.log_channel = config["logging"]["channel_id"]
 
         except KeyError:
             _logger.exception(

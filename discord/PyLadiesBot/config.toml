@@ -1,3 +1,6 @@
+[discord_server]
+GUILD = 1000000000000000 # Needed for one-off commands (API) with no message context
+
 [roles]
 ORGANISERS = 1253767144286588990
 VOLUNTEERS = 1253767144286588989
@@ -42,6 +45,7 @@ DONATIONS_CHANNEL_ID = 1314028552223457471
 
 [logging]
 LOG_LEVEL = "INFO"
+channel_id = "TO SET"
 
 [program_notifications]
 # UTC offset in hours (e.g. 2 for CEST)

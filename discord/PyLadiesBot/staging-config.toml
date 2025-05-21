@@ -1,3 +1,7 @@
+[discord_server]
+GUILD = 1000000000000000 # Needed for one-off commands (API) with no message context
+
+
 [roles]
 ORGANISERS = 1249772565887582301
 VOLUNTEERS = 1249772565887582300
@@ -38,6 +42,7 @@ PRETIX_CACHE_FILE = "pretix_cache.json"
 
 [logging]
 LOG_LEVEL = "INFO"
+channel_id = "TO SET"
 
 [program_notifications]
 # UTC offset in hours (e.g. 2 for CEST)

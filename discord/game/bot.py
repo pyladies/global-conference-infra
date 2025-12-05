@@ -10,6 +10,8 @@ import tomllib
 from pathlib import Path
 import pandas as pd
 
+from pretix_donations import PretixDonations
+
 
 CONFIG_PATH = Path("config.toml")
 with CONFIG_PATH.open("rb") as f:
@@ -405,6 +407,7 @@ async def main():
         await bot.add_cog(
             Game(bot, config["game"]["CHANNEL_ID"], config["game"]["RANKING_CHANNEL_ID"])
         )
+        await bot.add_cog(PretixDonations(bot))
         await bot.start(config["general"]["TOKEN"])
 
 

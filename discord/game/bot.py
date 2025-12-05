@@ -293,7 +293,7 @@ class Game(commands.Cog):
         self.guild = None
 
     # 5 minutes
-    @tasks.loop(minutes=5)
+    @tasks.loop(minutes=1)
     async def update_ranking(self):
         print(f"{datetime.now()} : Updating ranking")
         ranking_channel = self.bot.get_channel(self.ranking_channel_id)
@@ -341,7 +341,7 @@ class Game(commands.Cog):
         )
 
         embed = discord.Embed(
-            title="How many PyLadies chapters logos do you know?",
+            title="How many PyLadies chapters logos do you know? (2025 edition)",
             colour=0xFF8331,
         )
 
@@ -371,6 +371,12 @@ class Game(commands.Cog):
 
         embed.add_field(
             name=f"Ready to play? {emoji_party}",
+            value="",
+            inline=False,
+        )
+
+        embed.add_field(
+            name=f"(Scores will be updated every minute on <#{self.ranking_channel_id}> )",
             value="",
             inline=False,
         )
